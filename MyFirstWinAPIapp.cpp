@@ -5,8 +5,8 @@
 #include <Windows.h>
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-//Точка входа в приложение
 
+//Точка входа в приложение
 int WINAPI wWinMain(HINSTANCE hInst, HINSTANCE hPrevInst, PWSTR pCmdLine, int nCmdShow)
 {
 	//Регистрируем оконный класс
@@ -16,6 +16,8 @@ int WINAPI wWinMain(HINSTANCE hInst, HINSTANCE hPrevInst, PWSTR pCmdLine, int nC
 	wc.lpfnWndProc	= WindowProc;
 	wc.hInstance = hInst;
 	wc.lpszClassName = CLASS_NAME;
+	wc.hIcon = LoadIcon(NULL, IDI_APPLICATION);
+	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
 
 	RegisterClass(&wc);
 
@@ -53,6 +55,22 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
+	case WM_PAINT:
+	{
+		PAINTSTRUCT ps;
+		HDC hdc = BeginPaint(hwnd, &ps);
+
+		FillRect(hdc, &ps.rcPaint, (HBRUSH)(COLOR_WINDOW + 1));
+
+		EndPaint(hwnd, &ps);
+	}
+		return 0;
+	case WM_CLOSE:
+	{
+		if (MessageBox(hwnd, L"Чёёёёёёёёёёёё? Серьёзно?", L"Выходишь?", MB_YESNO) == IDYES)
+			DestroyWindow(hwnd);
+		return 0;
+	}
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		return 0;
